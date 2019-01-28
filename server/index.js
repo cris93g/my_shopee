@@ -7,7 +7,12 @@ const session = require("express-session");
 const passport = require("passport");
 app.use(json());
 const port = 3001;
+const cors = require("cors");
+
 const { getUser, strat, logout } = require(`${__dirname}/controller/authCtrl`);
+app.use(cors());
+app.use(json());
+app.use(require("body-parser").text());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -42,6 +47,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => done(null, user));
 
 app.get("/me", getUser);
+app.get("/logout", logout);
 
 app.get(
   "/login",

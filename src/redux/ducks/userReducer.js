@@ -1,17 +1,23 @@
 import axios from "axios";
 
 const GET_USER = "GET_USER";
-
+const LOG_OUT = "LOG_OUT";
 export function getUser() {
   return {
     type: GET_USER,
-    payload: axios.get("/api/me")
+    payload: axios.get("/me")
   };
 }
-
+export function logout() {
+  return {
+    type: LOG_OUT,
+    payload: axios.get("/logout")
+  };
+}
 const initialState = {
   user: {},
-  isAuthed: false
+  isAuthed: false,
+  userInfo: {}
 };
 
 export default function itemsReducer(state = initialState, action) {
@@ -27,6 +33,14 @@ export default function itemsReducer(state = initialState, action) {
         ...state,
         isAuthed: false
       };
+
+    case `${LOG_OUT}_FULFILLED`:
+      return {
+        ...state,
+        user: action.payload.data,
+        isAuthed: true
+      };
+
     default:
       return state;
   }
